@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.geometry.Point3D?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" minHeight="600.0" minWidth="800.0" xmlns="http://javafx.com/javafx/8"
+            fx:controller="hu.unideb.inf.auror.manager.controllers.MainController">
+    <children>
+        <VBox prefHeight="407.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+              AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <AnchorPane prefHeight="19.0" prefWidth="800.0" VBox.vgrow="NEVER">
+                    <children>
+                        <MenuBar AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                            <menus>
+                                <Menu mnemonicParsing="false" text="File">
+                                    <items>
+                                        <MenuItem fx:id="menuCloseItem" mnemonicParsing="false"
+                                                  onAction="#closeApplication" text="Close"/>
+                                    </items>
+                                </Menu>
+                                <Menu mnemonicParsing="false" text="Edit">
+                                    <items>
+                                        <MenuItem mnemonicParsing="false" text="Delete"/>
+                                    </items>
+                                </Menu>
+                                <Menu mnemonicParsing="false" text="Help">
+                                    <items>
+                                        <MenuItem mnemonicParsing="false" text="About"/>
+                                    </items>
+                                </Menu>
+                            </menus>
+                        </MenuBar>
+                    </children>
+                </AnchorPane>
+                <HBox prefHeight="35.0" prefWidth="800.0" VBox.vgrow="NEVER">
+                    <children>
+                        <AnchorPane prefHeight="37.0" prefWidth="625.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Label text="Kezdő dátum:" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="8.0"/>
+                                <DatePicker fx:id="dateTimeBegin" onAction="#refreshData" AnchorPane.leftAnchor="85.0"
+                                            AnchorPane.topAnchor="5.0"/>
+                                <Label text="Vég dátum:" AnchorPane.rightAnchor="190.0" AnchorPane.topAnchor="8.0"/>
+                                <DatePicker fx:id="dateTimeEnd" onAction="#refreshData" AnchorPane.rightAnchor="5.0"
+                                            AnchorPane.topAnchor="5.0"/>
+                            </children>
+                        </AnchorPane>
+                    </children>
+                </HBox>
+                <HBox prefHeight="385.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
+                    <children>
+                        <AnchorPane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <TableView fx:id="tableView" prefHeight="330.0" prefWidth="339.0"
+                                           AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0"
+                                           AnchorPane.rightAnchor="250.0" AnchorPane.topAnchor="5.0">
+                                    <rotationAxis>
+                                        <Point3D x="1.0"/>
+                                    </rotationAxis>
+                                </TableView>
+                            </children>
+                        </AnchorPane>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

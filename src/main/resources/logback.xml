@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <root level="INFO"/>
+    <logger name="org.hibernate" level="ALL"/>
+    <logger name="hu.unideb.inf.auror.manager.Main" level="ALL"/>
+</configuration>

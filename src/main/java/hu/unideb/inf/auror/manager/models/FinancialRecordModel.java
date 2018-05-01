@@ -26,18 +26,44 @@ package hu.unideb.inf.auror.manager.models;
  * #L%
  */
 
-import java.util.Date;
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "FINANCIAL_RECORDS")
 public class FinancialRecordModel {
+    @Id
+    private int id;
+    @Column(nullable = false)
     private boolean isIncome;
+    @Column(nullable = false)
     private double amount;
-    private Date date;
+    @GeneratedValue
+    private LocalDateTime dateOfCreation;
 
-    public boolean isIncome() {
+    public FinancialRecordModel() {
+    }
+
+    public FinancialRecordModel(int id, boolean isIncome, double amount, LocalDateTime dateOfCreation) {
+        setId(id);
+        setIsIncome(isIncome);
+        setAmount(amount);
+        setDateOfCreation(dateOfCreation);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public boolean getIsIncome() {
         return isIncome;
     }
 
-    public void setIncome(boolean income) {
+    public void setIsIncome(boolean income) {
         isIncome = income;
     }
 
@@ -49,11 +75,24 @@ public class FinancialRecordModel {
         this.amount = amount;
     }
 
-    public Date getDate() {
-        return date;
+    public LocalDateTime getDateOfCreation() {
+        return dateOfCreation;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setDateOfCreation(LocalDateTime date) {
+        if (date == null)
+            date = LocalDateTime.now();
+        this.dateOfCreation = date;
+    }
+
+    @Override
+    public String toString() {
+        String result = "";
+        result += "Id: " + this.getId() + "\n";
+        result += "IsIncome: " + this.getIsIncome() + "\n";
+        result += "Amount: " + this.getAmount() + "\n";
+        result += "Date of creation: " + this.getDateOfCreation() + "\n";
+
+        return result;
     }
 }
