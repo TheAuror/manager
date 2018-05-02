@@ -126,6 +126,9 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <mainClass>hu.unideb.inf.auror.manager.Main</mainClass>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

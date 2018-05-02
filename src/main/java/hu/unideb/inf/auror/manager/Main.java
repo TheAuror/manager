@@ -51,10 +51,10 @@ public class Main extends Application {
         //FinancialRecordModel frm = new FinancialRecordModel(1, false, 100, LocalDateTime.now());
 
         //dao.Save(frm);
-        dao.GetAllRecord().stream().forEach(e -> logger.error(e.toString()));
+        //dao.GetAllRecord().stream().forEach(e -> logger.error(e.toString()));
         logger.info("Main App start...");
         Parent root = FXMLLoader.load(Main.class.getResource("/fxml/MainView.fxml"));
-        primaryStage.setTitle("Financial manager");
+        primaryStage.setTitle("Financial manager" + (dao.IsInitialized() ? "" : " [Database Error]"));
         primaryStage.setOnCloseRequest(e ->
         {
             Platform.exit();

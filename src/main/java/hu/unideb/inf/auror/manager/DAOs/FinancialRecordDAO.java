@@ -34,7 +34,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
-import java.util.List;
+import java.util.*;
 
 public class FinancialRecordDAO {
     private final static Logger logger = LoggerFactory.getLogger(FinancialRecordDAO.class);
@@ -64,7 +64,13 @@ public class FinancialRecordDAO {
         return initialized;
     }
 
+    public boolean IsInitialized(){
+        return initialized;
+    }
+
     public List<FinancialRecordModel> GetAllRecord() {
+        if(!initialized)
+            return new ArrayList<>();
         TypedQuery<FinancialRecordModel> query = entityManager.createQuery("SELECT e FROM FinancialRecordModel e", FinancialRecordModel.class);
         return query.getResultList();
     }

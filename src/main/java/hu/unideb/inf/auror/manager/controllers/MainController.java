@@ -121,8 +121,8 @@ public class MainController implements Initializable {
 
     private void createAnimation() {
         timeline = new Timeline();
-        for (int i = 1; i < 180; i++) {
-            timeline.getKeyFrames().add(new KeyFrame(new Duration(1 / i * 400), new KeyValue(tableView.rotateProperty(), i)));
+        for (int i = 1; i < 360; i++) {
+            timeline.getKeyFrames().add(new KeyFrame(new Duration(1 / i * 600), new KeyValue(tableView.rotateProperty(), i)));
         }
     }
 
