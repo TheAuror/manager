@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <?import javafx.geometry.Point3D?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -56,7 +55,7 @@
                                            AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0"
                                            AnchorPane.rightAnchor="250.0" AnchorPane.topAnchor="5.0">
                                     <rotationAxis>
-                                        <Point3D x="1.0"/>
+                                        <Point3D y="1.0"/>
                                     </rotationAxis>
                                 </TableView>
                             </children>

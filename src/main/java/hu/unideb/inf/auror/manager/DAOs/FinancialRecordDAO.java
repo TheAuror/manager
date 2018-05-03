@@ -34,7 +34,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FinancialRecordDAO {
     private final static Logger logger = LoggerFactory.getLogger(FinancialRecordDAO.class);
@@ -76,6 +77,7 @@ public class FinancialRecordDAO {
     }
 
     public void Save(FinancialRecordModel record) {
+        record.setDateOfCreation(null);
         entityManager.getTransaction().begin();
         entityManager.persist(record);
         entityManager.getTransaction().commit();

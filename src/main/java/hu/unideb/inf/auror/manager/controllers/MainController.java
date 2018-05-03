@@ -37,11 +37,9 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import java.net.URL;
@@ -90,13 +88,11 @@ public class MainController implements Initializable {
     private void configureTableView() {
         tableView.setEditable(false);
         tableView.setItems(records);
-        TableColumn idColumn = new TableColumn("ID");
-        idColumn.setCellValueFactory(new PropertyValueFactory<FinancialRecordModel, String>("id"));
-        TableColumn isIncomeColumn = new TableColumn("isIncome");
-        isIncomeColumn.setCellValueFactory(new PropertyValueFactory<FinancialRecordModel, Boolean>("isIncome"));
-        TableColumn amountColumn = new TableColumn("amount");
+        TableColumn nameColumn = new TableColumn("Tétel neve");
+        nameColumn.setCellValueFactory(new PropertyValueFactory<FinancialRecordModel, String>("name"));
+        TableColumn amountColumn = new TableColumn("Összeg");
         amountColumn.setCellValueFactory(new PropertyValueFactory<FinancialRecordModel, String>("amount"));
-        TableColumn dateColumn = new TableColumn("date");
+        TableColumn dateColumn = new TableColumn("Dátum");
         dateColumn.setCellFactory(e -> {
             TableCell<FinancialRecordModel, LocalDateTime> cell = new TableCell<>() {
                 private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
@@ -115,12 +111,29 @@ public class MainController implements Initializable {
             return cell;
         });
         dateColumn.setCellValueFactory(new PropertyValueFactory<FinancialRecordModel, LocalDateTime>("dateOfCreation"));
-        tableView.getColumns().addAll(idColumn, isIncomeColumn, amountColumn, dateColumn);
+        tableView.setRowFactory(e -> new TableRow<FinancialRecordModel>() {
+            @Override
+            protected void updateItem(FinancialRecordModel record, boolean empty) {
+                super.updateItem(record, empty);
+                if (record == null)
+                    return;
+                if (record.getIsIncome()) {
+                    setTextFill(Color.GREEN);
+                    setStyle("-fx-background-color:lightgreen");
+                } else {
+                    setTextFill(Color.RED);
+                    setStyle("-fx-background-color:indianred");
+                }
+            }
+        });
+
+        tableView.getColumns().addAll(nameColumn, amountColumn, dateColumn);
         createAnimation();
     }
 
     private void createAnimation() {
         timeline = new Timeline();
+
         for (int i = 1; i < 360; i++) {
             timeline.getKeyFrames().add(new KeyFrame(new Duration(1 / i * 600), new KeyValue(tableView.rotateProperty(), i)));
         }
