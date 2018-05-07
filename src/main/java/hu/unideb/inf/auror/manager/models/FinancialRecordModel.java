@@ -40,7 +40,7 @@ public class FinancialRecordModel {
     private final static Logger logger = LoggerFactory.getLogger(FinancialRecordModel.class);
 
     @Id
-    private int id;
+    private int id = -1;
     @Column
     private String name;
     @Column(nullable = false)
@@ -63,17 +63,8 @@ public class FinancialRecordModel {
         return id;
     }
 
-    //Setters
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public boolean getIsIncome() {
@@ -92,6 +83,19 @@ public class FinancialRecordModel {
         return isRecurring;
     }
 
+    public Period getPeriod() {
+        return period;
+    }
+
+    //Setters
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     private void setIsRecurring(boolean recurring) {
         isRecurring = recurring;
     }
@@ -108,10 +112,6 @@ public class FinancialRecordModel {
         if (date == null)
             date = LocalDateTime.now();
         this.dateOfCreation = date;
-    }
-
-    public Period getPeriod() {
-        return period;
     }
 
     public void setPeriod(Period period) {

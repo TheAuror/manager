@@ -36,12 +36,18 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -115,8 +121,10 @@ public class MainController implements Initializable {
             @Override
             protected void updateItem(FinancialRecordModel record, boolean empty) {
                 super.updateItem(record, empty);
-                if (record == null)
+                if (record == null) {
+                    setStyle("-fx-background-color:white");
                     return;
+                }
                 if (record.getIsIncome()) {
                     setTextFill(Color.GREEN);
                     setStyle("-fx-background-color:lightgreen");
@@ -142,5 +150,54 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         configureTableView();
+        refreshData();
+    }
+
+    public void openSettings(ActionEvent actionEvent) {
+
+    }
+
+    public void createNewRecord(ActionEvent actionEvent) {
+        Parent root;
+        try {
+            FXMLLoader loader = new FXMLLoader(MainController.class.getResource("/fxml/EditorView.fxml"));
+            root = loader.load();
+            Stage stage = new Stage();
+            stage.setResizable(false);
+            stage.setTitle("Új rekord felvétele");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setOnHidden(e -> {
+                refreshData();
+            });
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void editRecord(ActionEvent actionEvent) {
+        Parent root;
+        FinancialRecordModel record = (FinancialRecordModel) tableView.getSelectionModel().getSelectedItem();
+        try {
+            FXMLLoader loader = new FXMLLoader(MainController.class.getResource("/fxml/EditorView.fxml"));
+            root = loader.load();
+            Stage stage = new Stage();
+            stage.setResizable(false);
+            stage.setTitle("Rekord szerkesztése");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            loader.<EditorController>getController().setRecord(record);
+            stage.setOnHidden(e -> {
+                refreshData();
+            });
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteRecord(ActionEvent actionEvent) {
+
     }
 }

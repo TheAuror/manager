@@ -7,10 +7,14 @@
 
     <persistence-unit name="AppPU">
         <properties>
+            <!-- Remote DB
             <property name="hibernate.connection.url"
-                      value="jdbc:firebirdsql:localhost/3050:C:/Users/Auror/Desktop/DATABASE.FDB?charSet=utf-8"/>
+                                  value="jdbc:firebirdsql:92.249.224.92/3050:DB?charSet=utf-8"/>-->
+            <!-- Local DB-->
+            <property name="hibernate.connection.url"
+                      value="jdbc:firebirdsql:localhost/3050:DB?charSet=utf-8"/>
             <property name="hibernate.connection.driver_class" value="org.firebirdsql.jdbc.FBDriver"/>
-            <property name="hibernate.connection.username" value="sysdba"/>
+            <property name="hibernate.connection.username" value="SYSDBA"/>
             <property name="hibernate.connection.password" value="admin"/>
             <property name="hibernate.archive.autodetection" value="class"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>

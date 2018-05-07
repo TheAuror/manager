@@ -34,8 +34,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class FinancialRecordDAO {
     private final static Logger logger = LoggerFactory.getLogger(FinancialRecordDAO.class);
@@ -44,6 +46,7 @@ public class FinancialRecordDAO {
 
     private EntityManagerFactory entityManagerFactory;
     private EntityManager entityManager;
+    private int nextRecordId = 0;
 
     private FinancialRecordDAO() {
         Initialize();
@@ -59,6 +62,7 @@ public class FinancialRecordDAO {
         try {
             entityManagerFactory = Persistence.createEntityManagerFactory("AppPU");
             entityManager = entityManagerFactory.createEntityManager();
+            initialized = true;
         } catch (Exception e) {
             initialized = false;
         }
@@ -76,11 +80,25 @@ public class FinancialRecordDAO {
         return query.getResultList();
     }
 
+    private int getNextId() {
+        Optional<Integer> maxId = GetAllRecord().stream().map(FinancialRecordModel::getId).max(Integer::compareTo);
+        maxId.ifPresent(integer -> nextRecordId = integer + 1);
+        return nextRecordId;
+    }
+
     public void Save(FinancialRecordModel record) {
-        record.setDateOfCreation(null);
-        entityManager.getTransaction().begin();
-        entityManager.persist(record);
-        entityManager.getTransaction().commit();
+        if (record.getDateOfCreation() == null)
+            record.setDateOfCreation(LocalDateTime.now());
+        if (record.getId() == -1) {
+            record.setId(getNextId());
+            entityManager.getTransaction().begin();
+            entityManager.persist(record);
+            entityManager.getTransaction().commit();
+        } else {
+            entityManager.getTransaction().begin();
+            entityManager.merge(record);
+            entityManager.getTransaction().commit();
+        }
     }
 
     public void asd() {

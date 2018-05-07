@@ -15,13 +15,16 @@
                             <menus>
                                 <Menu mnemonicParsing="false" text="File">
                                     <items>
+                                        <MenuItem mnemonicParsing="false" onAction="#openSettings" text="Settings"/>
                                         <MenuItem fx:id="menuCloseItem" mnemonicParsing="false"
                                                   onAction="#closeApplication" text="Close"/>
                                     </items>
                                 </Menu>
                                 <Menu mnemonicParsing="false" text="Edit">
                                     <items>
-                                        <MenuItem mnemonicParsing="false" text="Delete"/>
+                                        <MenuItem mnemonicParsing="false" onAction="#createNewRecord" text="New"/>
+                                        <MenuItem mnemonicParsing="false" onAction="#editRecord" text="Edit"/>
+                                        <MenuItem mnemonicParsing="false" onAction="#deleteRecord" text="Delete"/>
                                     </items>
                                 </Menu>
                                 <Menu mnemonicParsing="false" text="Help">
