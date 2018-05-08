@@ -46,6 +46,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URL;
@@ -56,6 +58,8 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class MainController implements Initializable {
+    private final static Logger logger = LoggerFactory.getLogger(MainController.class);
+
     @FXML
     private TableView tableView;
     @FXML
@@ -64,7 +68,7 @@ public class MainController implements Initializable {
     private DatePicker dateTimeEnd;
 
     private FinancialRecordDAO dao = FinancialRecordDAO.getInstance();
-    private ObservableList<FinancialRecordModel> records = FXCollections.observableArrayList(dao.GetAllRecord());
+    private ObservableList<FinancialRecordModel> records = FXCollections.observableArrayList(dao.GetAllRecords());
     private Timeline timeline;
 
     public void closeApplication(ActionEvent actionEvent) {
@@ -74,7 +78,7 @@ public class MainController implements Initializable {
 
     @FXML
     private void refreshData() {
-        records.setAll(dao.GetAllRecord().stream()
+        records.setAll(dao.GetAllRecords().stream()
                 .filter(e -> (e.getDateOfCreation().isAfter(getBeginDate()) ||
                         e.getDateOfCreation().isEqual(getBeginDate())) &&
                         (e.getDateOfCreation().isBefore(getEndDate()) ||
@@ -158,6 +162,7 @@ public class MainController implements Initializable {
     }
 
     public void createNewRecord(ActionEvent actionEvent) {
+        logger.info("Creating new record...");
         Parent root;
         try {
             FXMLLoader loader = new FXMLLoader(MainController.class.getResource("/fxml/EditorView.fxml"));
@@ -172,11 +177,12 @@ public class MainController implements Initializable {
             });
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.warn(e.getMessage());
         }
     }
 
     public void editRecord(ActionEvent actionEvent) {
+        logger.info("Editing selected record...");
         Parent root;
         FinancialRecordModel record = (FinancialRecordModel) tableView.getSelectionModel().getSelectedItem();
         try {
@@ -193,11 +199,18 @@ public class MainController implements Initializable {
             });
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.warn(e.getMessage());
         }
     }
 
     public void deleteRecord(ActionEvent actionEvent) {
-
+        logger.info("Deleting selected record...");
+        FinancialRecordModel record = (FinancialRecordModel) tableView.getSelectionModel().getSelectedItem();
+        if (record == null) {
+            logger.debug("No record is selected!");
+            return;
+        }
+        FinancialRecordDAO.getInstance().Delete(record);
+        refreshData();
     }
 }

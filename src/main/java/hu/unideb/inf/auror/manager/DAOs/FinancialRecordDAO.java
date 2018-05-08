@@ -38,6 +38,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class FinancialRecordDAO {
     private final static Logger logger = LoggerFactory.getLogger(FinancialRecordDAO.class);
@@ -73,15 +74,20 @@ public class FinancialRecordDAO {
         return initialized;
     }
 
-    public List<FinancialRecordModel> GetAllRecord() {
+    private List<FinancialRecordModel> GetRecords() {
         if(!initialized)
             return new ArrayList<>();
         TypedQuery<FinancialRecordModel> query = entityManager.createQuery("SELECT e FROM FinancialRecordModel e", FinancialRecordModel.class);
         return query.getResultList();
     }
 
+    public List<FinancialRecordModel> GetAllRecords() {
+        createRecurringTransactions();
+        return GetRecords();
+    }
+
     private int getNextId() {
-        Optional<Integer> maxId = GetAllRecord().stream().map(FinancialRecordModel::getId).max(Integer::compareTo);
+        Optional<Integer> maxId = GetAllRecords().stream().map(FinancialRecordModel::getId).max(Integer::compareTo);
         maxId.ifPresent(integer -> nextRecordId = integer + 1);
         return nextRecordId;
     }
@@ -101,16 +107,32 @@ public class FinancialRecordDAO {
         }
     }
 
-    public void asd() {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("AppPU");
-        EntityManager em = emf.createEntityManager();
-        FinancialRecordModel frm = new FinancialRecordModel();
-        frm.setAmount(100);
-        frm.setIsIncome(true);
-        em.getTransaction().begin();
-        em.persist(frm);
-        em.getTransaction().commit();
-        em.close();
-        logger.info(String.valueOf(frm.getAmount()));
+    public void Delete(FinancialRecordModel record) {
+        entityManager.getTransaction().begin();
+        entityManager.remove(record);
+        entityManager.getTransaction().commit();
+    }
+
+    private void createRecurringTransactions() {
+        List<FinancialRecordModel> records = GetRecords().stream()
+                .filter(FinancialRecordModel::getIsRecurring).collect(Collectors.toCollection(ArrayList::new));
+        for (FinancialRecordModel record : records) {
+            createRecurringTransaction(record);
+        }
+    }
+
+    private void createRecurringTransaction(FinancialRecordModel record) {
+        if (record.getDateOfCreation().plus(record.getPeriod()).isBefore(LocalDateTime.now())) {
+            FinancialRecordModel newRecord = new FinancialRecordModel()
+                    .withName(record.getName())
+                    .withAmount(record.getAmount())
+                    .withDateOfCreation(record.getDateOfCreation().plus(record.getPeriod()))
+                    .withIsIncome(record.getIsIncome())
+                    .withPeriod(record.getPeriod());
+            record.setPeriod(null);
+            Save(record);
+            Save(newRecord);
+            createRecurringTransaction(newRecord);
+        }
     }
 }
