@@ -95,6 +95,8 @@ public class FinancialRecordDAO {
     public void Save(FinancialRecordModel record) {
         if (record.getDateOfCreation() == null)
             record.setDateOfCreation(LocalDateTime.now());
+        if (record.getUser() == null)
+            record.setUser(UserDAO.getInstance().GetCurrentUser());
         if (record.getId() == -1) {
             record.setId(getNextId());
             entityManager.getTransaction().begin();
@@ -128,7 +130,8 @@ public class FinancialRecordDAO {
                     .withAmount(record.getAmount())
                     .withDateOfCreation(record.getDateOfCreation().plus(record.getPeriod()))
                     .withIsIncome(record.getIsIncome())
-                    .withPeriod(record.getPeriod());
+                    .withPeriod(record.getPeriod())
+                    .withUser(record.getUser());
             record.setPeriod(null);
             Save(record);
             Save(newRecord);

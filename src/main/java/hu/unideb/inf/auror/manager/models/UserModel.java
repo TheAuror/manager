@@ -26,6 +26,10 @@ package hu.unideb.inf.auror.manager.models;
  * #L%
  */
 
+import hu.unideb.inf.auror.manager.utilities.PasswordUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -34,6 +38,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "USERS")
 public class UserModel {
+    private final static Logger logger = LoggerFactory.getLogger(UserModel.class);
     @Id
     private int id;
     @Column(nullable = false, unique = true)
@@ -43,6 +48,30 @@ public class UserModel {
 
     public UserModel() {
 
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = PasswordUtil.hashPassword(password, "");
     }
 
 

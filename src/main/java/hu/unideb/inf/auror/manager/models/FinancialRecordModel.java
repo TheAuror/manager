@@ -54,6 +54,8 @@ public class FinancialRecordModel {
     private boolean isRecurring = false;
     @Column
     private Period period;
+    @OneToOne
+    private UserModel user;
 
     public FinancialRecordModel() {
     }
@@ -85,6 +87,10 @@ public class FinancialRecordModel {
 
     public Period getPeriod() {
         return period;
+    }
+
+    public UserModel getUser() {
+        return user;
     }
 
     //Setters
@@ -126,6 +132,10 @@ public class FinancialRecordModel {
         this.period = period;
     }
 
+    public void setUser(UserModel user) {
+        this.user = user;
+    }
+
     //Withs
     public FinancialRecordModel withId(int id) {
         setId(id);
@@ -159,6 +169,11 @@ public class FinancialRecordModel {
 
     public FinancialRecordModel withPeriod(Period period) {
         setPeriod(period);
+        return this;
+    }
+
+    public FinancialRecordModel withUser(UserModel user) {
+        setUser(user);
         return this;
     }
 

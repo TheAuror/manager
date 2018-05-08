@@ -67,12 +67,12 @@ public class EditorController implements Initializable {
     public TextField recordAmountTextField;
     public CheckBox isIncomeCheckBox;
     public DatePicker dateOfCreationPicker;
-    public ChoiceBox intervalChoiceBox;
+    public ChoiceBox<java.io.Serializable> intervalChoiceBox;
     public CheckBox isRecurringCheckBox;
     public Label intervalLabel;
     private FinancialRecordModel editedRecord;
 
-    public FinancialRecordModel getRecord() {
+    private FinancialRecordModel getRecord() {
         if (editedRecord == null)
             editedRecord = new FinancialRecordModel();
         editedRecord.setName(recordNameTextField.getText());
@@ -84,7 +84,7 @@ public class EditorController implements Initializable {
         return editedRecord;
     }
 
-    public void setRecord(FinancialRecordModel record) {
+    void setRecord(FinancialRecordModel record) {
         recordNameTextField.setText(record.getName());
         recordAmountTextField.setText(String.valueOf(record.getAmount()));
         isIncomeCheckBox.setSelected(record.getIsIncome());
@@ -99,7 +99,7 @@ public class EditorController implements Initializable {
                 intervalChoiceBox.setValue(WEEK);
             if (record.getPeriod().equals(Period.ofDays(1)))
                 intervalChoiceBox.setValue(DAY);
-            isRecurringChecked(null);
+            isRecurringChecked();
         }
         editedRecord = record;
     }
@@ -126,7 +126,7 @@ public class EditorController implements Initializable {
     }
 
 
-    public void isRecurringChecked(ActionEvent actionEvent) {
+    public void isRecurringChecked() {
         if (isRecurringCheckBox.isSelected()) {
             intervalLabel.setVisible(true);
             intervalChoiceBox.setVisible(true);
@@ -145,7 +145,7 @@ public class EditorController implements Initializable {
 
     private void initRecordAmountTextField() {
         Pattern validDoubleText = Pattern.compile(fpRegex);
-        TextFormatter<Double> textFormatter = new TextFormatter<Double>(new DoubleStringConverter(), 0.0,
+        TextFormatter<Double> textFormatter = new TextFormatter<>(new DoubleStringConverter(), 0.0,
                 change -> {
                     String newText = change.getControlNewText();
                     if (validDoubleText.matcher(newText).matches()) {
@@ -158,7 +158,7 @@ public class EditorController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initChoiceBox();
-        isRecurringChecked(null);
+        isRecurringChecked();
         initRecordAmountTextField();
     }
 

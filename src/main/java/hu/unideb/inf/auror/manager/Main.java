@@ -46,12 +46,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
         FinancialRecordDAO dao = FinancialRecordDAO.getInstance();
-        //FinancialRecordModel frm = new FinancialRecordModel(1, false, 100, LocalDateTime.now());
-
-        //dao.Save(frm);
-        //dao.GetAllRecords().stream().forEach(e -> logger.error(e.toString()));
         logger.info("Main App start...");
         Parent root = FXMLLoader.load(Main.class.getResource("/fxml/MainView.fxml"));
         primaryStage.setTitle("Financial manager" + (dao.IsInitialized() ? "" : " [Database Error]"));

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="105.0" prefWidth="234.0" xmlns="http://javafx.com/javafx/8"
+            fx:controller="hu.unideb.inf.auror.manager.controllers.LoginController">
+    <children>
+        <VBox prefHeight="138.0" prefWidth="254.0">
+            <children>
+                <HBox prefHeight="37.0" prefWidth="601.0">
+                    <children>
+                        <Label text="Felhasználónév:">
+                            <padding>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                            </padding>
+                            <HBox.margin>
+                                <Insets top="3.0"/>
+                            </HBox.margin>
+                        </Label>
+                        <TextField fx:id="usernameTextField" promptText="Felhasználónév">
+                            <HBox.margin>
+                                <Insets left="5.0" top="5.0"/>
+                            </HBox.margin>
+                        </TextField>
+                    </children>
+                </HBox>
+                <HBox prefHeight="26.0" prefWidth="601.0">
+                    <children>
+                        <Label text="Jelszó:">
+                            <padding>
+                                <Insets bottom="5.0" left="5.0" right="54.0" top="5.0"/>
+                            </padding>
+                            <HBox.margin>
+                                <Insets top="3.0"/>
+                            </HBox.margin>
+                        </Label>
+                        <PasswordField fx:id="passwordField" promptText="Jelszó">
+                            <HBox.margin>
+                                <Insets left="5.0" top="5.0"/>
+                            </HBox.margin>
+                        </PasswordField>
+                    </children>
+                </HBox>
+                <Label fx:id="errorLabel" text="Hiba!" textFill="RED">
+                    <VBox.margin>
+                        <Insets/>
+                    </VBox.margin>
+                    <padding>
+                        <Insets bottom="5.0" left="10.0" right="5.0" top="9.0"/>
+                    </padding>
+                </Label>
+            </children>
+        </VBox>
+        <Button mnemonicParsing="false" onAction="#Login" text="Bejelentkezés" AnchorPane.bottomAnchor="5.0"
+                AnchorPane.leftAnchor="5.0"/>
+        <Button mnemonicParsing="false" onAction="#Register" text="Regisztráció" AnchorPane.bottomAnchor="5.0"
+                AnchorPane.rightAnchor="5.0"/>
+    </children>
+</AnchorPane>
