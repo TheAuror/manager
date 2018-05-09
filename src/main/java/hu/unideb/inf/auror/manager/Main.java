@@ -48,7 +48,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         FinancialRecordDAO dao = FinancialRecordDAO.getInstance();
         logger.info("Main App start...");
-        Parent root = FXMLLoader.load(Main.class.getResource("/fxml/MainView.fxml"));
+        Parent root = FXMLLoader.load(Main.class.getResource("/fxml/LoginView.fxml"));
         primaryStage.setTitle("Financial manager" + (dao.IsInitialized() ? "" : " [Database Error]"));
         primaryStage.setOnCloseRequest(e ->
         {

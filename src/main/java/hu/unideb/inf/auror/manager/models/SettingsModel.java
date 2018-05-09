@@ -35,7 +35,7 @@ import javax.persistence.Table;
 @Table(name = "SETTINGS")
 public class SettingsModel {
     @Id
-    private int id;
+    private int id = -1;
     @OneToOne
     private UserModel user;
 }

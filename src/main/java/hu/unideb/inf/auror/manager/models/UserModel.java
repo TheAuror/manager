@@ -40,7 +40,7 @@ import javax.persistence.Table;
 public class UserModel {
     private final static Logger logger = LoggerFactory.getLogger(UserModel.class);
     @Id
-    private int id;
+    private int id = -1;
     @Column(nullable = false, unique = true)
     private String name;
     @Column(nullable = false)

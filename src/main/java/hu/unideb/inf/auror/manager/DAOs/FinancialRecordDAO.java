@@ -74,16 +74,18 @@ public class FinancialRecordDAO {
         return initialized;
     }
 
-    private List<FinancialRecordModel> GetRecords() {
-        if(!initialized)
-            return new ArrayList<>();
-        TypedQuery<FinancialRecordModel> query = entityManager.createQuery("SELECT e FROM FinancialRecordModel e", FinancialRecordModel.class);
-        return query.getResultList();
+    public List<FinancialRecordModel> GetRecordsForUser() {
+        return GetAllRecords().stream()
+                .filter(e -> e.getUser().getId() == UserDAO.getInstance().GetCurrentUser().getId())
+                .collect(Collectors.toList());
     }
 
     public List<FinancialRecordModel> GetAllRecords() {
-        createRecurringTransactions();
-        return GetRecords();
+        if(!initialized)
+            return new ArrayList<>();
+        TypedQuery<FinancialRecordModel> query = entityManager.createQuery("SELECT e FROM FinancialRecordModel e", FinancialRecordModel.class);
+        createRecurringTransactions(query.getResultList());
+        return query.getResultList();
     }
 
     private int getNextId() {
@@ -115,15 +117,17 @@ public class FinancialRecordDAO {
         entityManager.getTransaction().commit();
     }
 
-    private void createRecurringTransactions() {
-        List<FinancialRecordModel> records = GetRecords().stream()
+    private boolean createRecurringTransactions(List<FinancialRecordModel> recordModels) {
+        boolean addedRecord = false;
+        List<FinancialRecordModel> records = recordModels.stream()
                 .filter(FinancialRecordModel::getIsRecurring).collect(Collectors.toCollection(ArrayList::new));
         for (FinancialRecordModel record : records) {
-            createRecurringTransaction(record);
+            addedRecord |= createRecurringTransaction(record);
         }
+        return addedRecord;
     }
 
-    private void createRecurringTransaction(FinancialRecordModel record) {
+    private boolean createRecurringTransaction(FinancialRecordModel record) {
         if (record.getDateOfCreation().plus(record.getPeriod()).isBefore(LocalDateTime.now())) {
             FinancialRecordModel newRecord = new FinancialRecordModel()
                     .withName(record.getName())
@@ -136,6 +140,8 @@ public class FinancialRecordDAO {
             Save(record);
             Save(newRecord);
             createRecurringTransaction(newRecord);
+            return true;
         }
+        return false;
     }
 }

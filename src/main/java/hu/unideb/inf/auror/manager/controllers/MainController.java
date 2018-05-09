@@ -78,7 +78,7 @@ public class MainController implements Initializable {
 
     @FXML
     private void refreshData() {
-        records.setAll(dao.GetAllRecords().stream()
+        records.setAll(dao.GetRecordsForUser().stream()
                 .filter(e -> (e.getDateOfCreation().isAfter(getBeginDate()) ||
                         e.getDateOfCreation().isEqual(getBeginDate())) &&
                         (e.getDateOfCreation().isBefore(getEndDate()) ||

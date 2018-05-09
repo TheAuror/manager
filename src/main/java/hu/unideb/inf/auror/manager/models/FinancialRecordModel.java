@@ -54,7 +54,7 @@ public class FinancialRecordModel {
     private boolean isRecurring = false;
     @Column
     private Period period;
-    @OneToOne
+    @ManyToOne
     private UserModel user;
 
     public FinancialRecordModel() {
