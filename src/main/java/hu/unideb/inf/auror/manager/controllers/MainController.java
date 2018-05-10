@@ -34,7 +34,6 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -57,25 +56,53 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+/**
+ * Controller for the main view of the application.
+ */
 public class MainController implements Initializable {
+    /**
+     * SLF4J Logger.
+     */
     private final static Logger logger = LoggerFactory.getLogger(MainController.class);
 
-    @FXML
-    private TableView tableView;
-    @FXML
-    private DatePicker dateTimeBegin;
-    @FXML
-    private DatePicker dateTimeEnd;
 
+    /**
+     * JavaFX TableView.
+     */
+    public TableView tableView;
+    /**
+     * JavaFX DatePicker.
+     */
+    public DatePicker dateTimeBegin;
+    /**
+     * JavaFX DatePicker.
+     */
+    public DatePicker dateTimeEnd;
+
+    /**
+     * Data access object for the financial records.
+     */
     private FinancialRecordDAO dao = FinancialRecordDAO.getInstance();
+    /**
+     * An ObservableList that contains the records for the TableView.
+     */
     private ObservableList<FinancialRecordModel> records = FXCollections.observableArrayList(dao.GetAllRecords());
+    /**
+     * Timeline created for the animation.
+     */
     private Timeline timeline;
 
-    public void closeApplication(ActionEvent actionEvent) {
+    /**
+     * Closes the application.
+     */
+    public void closeApplication() {
         Platform.exit();
         System.exit(0);
     }
 
+    /**
+     * Reloads the records list's records from the database.
+     */
     @FXML
     private void refreshData() {
         records.setAll(dao.GetRecordsForUser().stream()
@@ -87,14 +114,26 @@ public class MainController implements Initializable {
         timeline.play();
     }
 
+    /**
+     * @return Returns a LocalDateTime based on the dateTimeBegin DatePicker's value.
+     */
     private LocalDateTime getBeginDate() {
         return dateTimeBegin.getValue() == null ? LocalDateTime.MIN : dateTimeBegin.getValue().atStartOfDay();
     }
 
+    /**
+     * @return Returns a LocalDateTime based on the dateTimeEnd DatePicker's value.
+     */
     private LocalDateTime getEndDate() {
         return dateTimeEnd.getValue() == null ? LocalDateTime.MAX : dateTimeEnd.getValue().atStartOfDay();
     }
 
+    /**
+     * Configures the TableView for the window.
+     * Creates the columns for the TableView.
+     * Creates the CellValueFactories for the Columns.
+     * Sets the records list as the data source of the table.
+     */
     private void configureTableView() {
         tableView.setEditable(false);
         tableView.setItems(records);
@@ -143,6 +182,9 @@ public class MainController implements Initializable {
         createAnimation();
     }
 
+    /**
+     * Creates the timeline used in the table flip animation.
+     */
     private void createAnimation() {
         timeline = new Timeline();
 
@@ -151,17 +193,23 @@ public class MainController implements Initializable {
         }
     }
 
+    /**
+     * Initializes the controller.
+     *
+     * @param location  <code>URL</code>
+     * @param resources <code>ResourceBundle</code>
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         configureTableView();
         refreshData();
     }
 
-    public void openSettings(ActionEvent actionEvent) {
-
-    }
-
-    public void createNewRecord(ActionEvent actionEvent) {
+    /**
+     * Creates a new record.
+     * Opens the editor dialog so the user can fill out the properties for the new record.
+     */
+    public void createNewRecord() {
         logger.info("Creating new record...");
         Parent root;
         try {
@@ -181,10 +229,18 @@ public class MainController implements Initializable {
         }
     }
 
-    public void editRecord(ActionEvent actionEvent) {
+    /**
+     * Edits the selected record.
+     * Opens the editor dialog and sets the selected record as edited record in it's controller.
+     */
+    public void editRecord() {
         logger.info("Editing selected record...");
         Parent root;
         FinancialRecordModel record = (FinancialRecordModel) tableView.getSelectionModel().getSelectedItem();
+        if (record == null) {
+            logger.debug("No record is selected!");
+            return;
+        }
         try {
             FXMLLoader loader = new FXMLLoader(MainController.class.getResource("/fxml/EditorView.fxml"));
             root = loader.load();
@@ -194,16 +250,17 @@ public class MainController implements Initializable {
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             loader.<EditorController>getController().setRecord(record);
-            stage.setOnHidden(e -> {
-                refreshData();
-            });
+            stage.setOnHidden(e -> refreshData());
             stage.show();
         } catch (IOException e) {
             logger.warn(e.getMessage());
         }
     }
 
-    public void deleteRecord(ActionEvent actionEvent) {
+    /**
+     * Deletes the selected record, and refreshes the table.
+     */
+    public void deleteRecord() {
         logger.info("Deleting selected record...");
         FinancialRecordModel record = (FinancialRecordModel) tableView.getSelectionModel().getSelectedItem();
         if (record == null) {

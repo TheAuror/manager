@@ -36,26 +36,51 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Main extends Application {
+import java.io.IOException;
 
+/**
+ * Main class that contains the main method.
+ */
+public class Main extends Application {
+    /**
+     * SLF4J Logger.
+     */
     private final static Logger logger = LoggerFactory.getLogger(Main.class);
 
+    /**
+     * Main method of the program.
+     *
+     * @param args Command line arguments.
+     */
     public static void main(String[] args) {
         launch(args);
     }
 
+    /**
+     * Creates the login view.
+     *
+     * @param primaryStage Primary stage of the JavaFX application.
+     */
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         FinancialRecordDAO dao = FinancialRecordDAO.getInstance();
         logger.info("Main App start...");
-        Parent root = FXMLLoader.load(Main.class.getResource("/fxml/LoginView.fxml"));
+        Parent root;
+        try {
+            root = FXMLLoader.load(Main.class.getResource("/fxml/LoginView.fxml"));
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+            return;
+        }
         primaryStage.setTitle("Financial manager" + (dao.IsInitialized() ? "" : " [Database Error]"));
         primaryStage.setOnCloseRequest(e ->
         {
             Platform.exit();
             System.exit(0);
         });
+        primaryStage.setResizable(false);
         Scene scene = new Scene(root);
+
         primaryStage.setScene(scene);
         primaryStage.show();
         logger.info("Showing stage...");

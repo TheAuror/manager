@@ -33,45 +33,87 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.util.converter.DoubleStringConverter;
+import org.jetbrains.annotations.Nullable;
 
 import java.net.URL;
 import java.time.Period;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
+/**
+ * Controller for the dialog, that allows the user to create or edit a <code>FinancialRecordModel</code>.
+ */
 public class EditorController implements Initializable {
+    /**
+     * Static string for "A year" in hungarian.
+     */
     private static final String YEAR = "Egy év";
+    /**
+     * Static string for "A month" in hungarian.
+     */
     private static final String MONTH = "Egy hónap";
+    /**
+     * Static string for "A week" in hungarian.
+     */
     private static final String WEEK = "Egy hét";
+    /**
+     * Static string for "A day" in hungarian.
+     */
     private static final String DAY = "Egy nap";
-    //Regex for checking if a string is parsable to double
-    //Source : JavaDoc
-    //https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html#valueOf-java.lang.String-
-    private final String Digits = "(\\p{Digit}+)";
-    private final String HexDigits = "(\\p{XDigit}+)";
-    private final String Exp = "[eE][+-]?" + Digits;
+    /**
+     * Regex for checking if a string is parsable to double based on JavaDoc.
+     * https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html#valueOf-java.lang.String-
+     */
     private final String fpRegex =
-            ("[\\x00-\\x20]*" +
-                    "[+-]?(" +
-                    "NaN|" +
-                    "Infinity|" +
-                    "(((" + Digits + "(\\.)?(" + Digits + "?)(" + Exp + ")?)|" +
-                    "(\\.(" + Digits + ")(" + Exp + ")?)|" +
-                    "((" +
-                    "(0[xX]" + HexDigits + "(\\.)?)|" +
-                    "(0[xX]" + HexDigits + "?(\\.)" + HexDigits + ")" +
-                    ")[pP][+-]?" + Digits + "))" +
-                    "[fFdD]?))" +
-                    "[\\x00-\\x20]*");
+            ("[\\x00-\\x20]*[+-]?(NaN|Infinity|((((\\p{Digit}+)" +
+                    "(\\.)?((\\p{Digit}+)?)([eE][+-]?(\\p{Digit" +
+                    "}+))?)|(\\.((\\p{Digit}+))([eE][+-]?(\\p{D" +
+                    "igit}+))?)|(((0[xX](\\p{XDigit}+)(\\.)?)|(" +
+                    "0[xX](\\p{XDigit}+)?(\\.)(\\p{XDigit}+)))[" +
+                    "pP][+-]?(\\p{Digit}+)))[fFdD]?))[\\x00-\\x20]*");
+
+    /**
+     * JavaFX TextField.
+     * Contains the name of the record.
+     */
     public TextField recordNameTextField;
+    /**
+     * JavaFX TextField.
+     * Contains the amount of the record.
+     */
     public TextField recordAmountTextField;
+    /**
+     * JavaFX CheckBox.
+     * Checked if the record is income.
+     */
     public CheckBox isIncomeCheckBox;
+    /**
+     * JavaFX DatePicker.
+     * Contains the record's date of creation.
+     */
     public DatePicker dateOfCreationPicker;
+    /**
+     * JavaFX ChoiceBox.
+     * Contains the available Period choices.
+     */
     public ChoiceBox<java.io.Serializable> intervalChoiceBox;
+    /**
+     * JavaFX CheckBox.
+     * Checked if the record is periodical.
+     */
     public CheckBox isRecurringCheckBox;
+    /**
+     * JavaFX Label.
+     */
     public Label intervalLabel;
+    /**
+     * Currently edited record.
+     */
     private FinancialRecordModel editedRecord;
 
+    /**
+     * @return Returns a <code>FinancialRecordModel</code> with the properties that the user gave.
+     */
     private FinancialRecordModel getRecord() {
         if (editedRecord == null)
             editedRecord = new FinancialRecordModel();
@@ -84,6 +126,13 @@ public class EditorController implements Initializable {
         return editedRecord;
     }
 
+    /**
+     * Sets the dialogs TextFields and its other controls with
+     * the corresponding property from the given record
+     * so the user can edit it.
+     *
+     * @param record A <code>FinancialRecordModel</code>
+     */
     void setRecord(FinancialRecordModel record) {
         recordNameTextField.setText(record.getName());
         recordAmountTextField.setText(String.valueOf(record.getAmount()));
@@ -104,6 +153,10 @@ public class EditorController implements Initializable {
         editedRecord = record;
     }
 
+    /**
+     * @return Returns Period according to the selected value.
+     */
+    @Nullable
     private Period getPeriod() {
         Period period = null;
         if (!isRecurringCheckBox.isSelected())
@@ -125,7 +178,33 @@ public class EditorController implements Initializable {
         return period;
     }
 
+    /**
+     * Initializes the scene.
+     *
+     * @param location  <code>URL</code>
+     * @param resources <code>ResourceBundle</code>
+     */
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        initChoiceBox();
+        isRecurringChecked();
+        initRecordAmountTextField();
+    }
 
+    /**
+     * Adds the items to the intervalChoiceBox.
+     */
+    private void initChoiceBox() {
+        intervalChoiceBox.getItems().add(YEAR);
+        intervalChoiceBox.getItems().add(MONTH);
+        intervalChoiceBox.getItems().add(WEEK);
+        intervalChoiceBox.getItems().add(DAY);
+    }
+
+    /**
+     * Checks if the recurringCheckBox is checked and sets the
+     * intervalLabel's and the intervalChoiceBox's visibility based on said check.
+     */
     public void isRecurringChecked() {
         if (isRecurringCheckBox.isSelected()) {
             intervalLabel.setVisible(true);
@@ -136,13 +215,11 @@ public class EditorController implements Initializable {
         }
     }
 
-    private void initChoiceBox() {
-        intervalChoiceBox.getItems().add(YEAR);
-        intervalChoiceBox.getItems().add(MONTH);
-        intervalChoiceBox.getItems().add(WEEK);
-        intervalChoiceBox.getItems().add(DAY);
-    }
-
+    /**
+     * Initializes the amountTextField.
+     * Compiles the regex used for validation and creates a new
+     * <code>TextFormatter</code> which applies it.
+     */
     private void initRecordAmountTextField() {
         Pattern validDoubleText = Pattern.compile(fpRegex);
         TextFormatter<Double> textFormatter = new TextFormatter<>(new DoubleStringConverter(), 0.0,
@@ -155,17 +232,20 @@ public class EditorController implements Initializable {
         recordAmountTextField.setTextFormatter(textFormatter);
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        initChoiceBox();
-        isRecurringChecked();
-        initRecordAmountTextField();
-    }
-
+    /**
+     * Hides the window.
+     *
+     * @param actionEvent <code>ActionEvent</code>
+     */
     public void cancel(ActionEvent actionEvent) {
         ((Node) (actionEvent.getSource())).getScene().getWindow().hide();
     }
 
+    /**
+     * Checks if the gives values are valid then saves the record and hides the window.
+     *
+     * @param actionEvent <code>ActionEvent</code>
+     */
     public void saveRecord(ActionEvent actionEvent) {
         if (recordNameTextField.getText().isEmpty()) {
             showAlertWindow("A tétel neve nem lehet üres!");
@@ -184,6 +264,11 @@ public class EditorController implements Initializable {
         ((Node) (actionEvent.getSource())).getScene().getWindow().hide();
     }
 
+    /**
+     * Creates an alert window with the given error message.
+     *
+     * @param error Error message.
+     */
     private void showAlertWindow(String error) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Hiba");

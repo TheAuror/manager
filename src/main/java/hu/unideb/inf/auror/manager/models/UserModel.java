@@ -26,7 +26,7 @@ package hu.unideb.inf.auror.manager.models;
  * #L%
  */
 
-import hu.unideb.inf.auror.manager.utilities.PasswordUtil;
+import hu.unideb.inf.auror.manager.Services.PasswordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,43 +35,86 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * Represents a record in the USERS table.
+ * Stores the user's name and his/her hashed password.
+ */
 @Entity
 @Table(name = "USERS")
 public class UserModel {
+    /**
+     * SLF4J Logger.
+     */
     private final static Logger logger = LoggerFactory.getLogger(UserModel.class);
+    /**
+     * Stores the record's id.
+     */
     @Id
     private int id = -1;
+    /**
+     * Stores the user's name.
+     */
     @Column(nullable = false, unique = true)
     private String name;
+    /**
+     * Stores the user's hashed password.
+     */
     @Column(nullable = false)
     private String password;
 
+    /**
+     * Basic constructor.
+     */
     public UserModel() {
 
     }
 
+    /**
+     * @return Returns the user's id.
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Sets the record's id.
+     *
+     * @param id The id which will be set.
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     * @return Returns the user's name.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets the user's name.
+     *
+     * @param name The username which will be set.
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * @return Returns the hashed password.
+     */
     public String getPassword() {
         return password;
     }
 
+    /**
+     * Hashes and sets the password for the user.
+     *
+     * @param password The password which hash will be set.
+     */
     public void setPassword(String password) {
-        this.password = PasswordUtil.hashPassword(password, "");
+        this.password = PasswordService.hashPassword(password, "");
     }
 
 

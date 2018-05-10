@@ -34,92 +34,178 @@ import java.time.LocalDateTime;
 import java.time.Period;
 
 
+/**
+ * A model that stores the data for a financial transaction.
+ */
 @Entity
 @Table(name = "FINANCIAL_RECORDS")
 public class FinancialRecordModel {
+    /**
+     * SLF4J Logger.
+     */
     private final static Logger logger = LoggerFactory.getLogger(FinancialRecordModel.class);
 
+    /**
+     * Stores the id of the record.
+     */
     @Id
     private int id = -1;
+    /**
+     * Stores the name of the financial transaction.
+     */
     @Column
     private String name;
+    /**
+     * Indicates if the transaction was an income.
+     */
     @Column(nullable = false)
     private boolean isIncome;
+    /**
+     * Stores the amount of the financial transaction.
+     */
     @Column(nullable = false)
     private double amount;
+    /**
+     * Stores the date of the records creation.
+     */
     @GeneratedValue
     @Column(nullable = false)
     private LocalDateTime dateOfCreation;
+    /**
+     * Indicates if the record is a recurring one.
+     */
     @Column(nullable = false)
     private boolean isRecurring = false;
+    /**
+     * A period field which will be stored in the database in binary.
+     */
     @Column
     private Period period;
+    /**
+     * A foreign key for the USERS table.
+     */
     @ManyToOne
     private UserModel user;
 
+    /**
+     * Basic constructor.
+     */
     public FinancialRecordModel() {
     }
 
-    //Getters
+    /**
+     * @return Returns the id field of the model.
+     */
     public int getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public boolean getIsIncome() {
-        return isIncome;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public LocalDateTime getDateOfCreation() {
-        return dateOfCreation;
-    }
-
-    public boolean getIsRecurring() {
-        return isRecurring;
-    }
-
-    public Period getPeriod() {
-        return period;
-    }
-
-    public UserModel getUser() {
-        return user;
-    }
-
-    //Setters
+    /**
+     * Sets the id of the model.
+     *
+     * @param id The id which will be set.
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     * @return Returns the name field of the model.
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Sets the name field of the model.
+     *
+     * @param name The string which will be set.
+     */
     public void setName(String name) {
         this.name = name;
     }
 
-    private void setIsRecurring(boolean recurring) {
-        isRecurring = recurring;
+    /**
+     * @return Returns the isIncome field of the model.
+     */
+    public boolean getIsIncome() {
+        return isIncome;
     }
 
+    /**
+     * Sets the isIncome field of the model.
+     *
+     * @param income The boolean value which will be set.
+     */
     public void setIsIncome(boolean income) {
         isIncome = income;
     }
 
+    /**
+     * @return Returns the amount field of the model.
+     */
+    public double getAmount() {
+        return amount;
+    }
+
+    /**
+     * Sets the amount field of the model.
+     *
+     * @param amount The amount which will be set.
+     */
     public void setAmount(double amount) {
         this.amount = amount;
     }
 
+    /**
+     * @return Returns the dateOfCreation field of the model.
+     */
+    public LocalDateTime getDateOfCreation() {
+        return dateOfCreation;
+    }
+
+    /**
+     * Sets the dateOfCreation field of the model.
+     * If the given parameter is null the LocalDateTime.now() will be set.
+     *
+     * @param date The LocalDateTime which will be set.
+     */
     public void setDateOfCreation(LocalDateTime date) {
         if (date == null)
             date = LocalDateTime.now();
         this.dateOfCreation = date;
     }
 
+    /**
+     * @return Returns the isRecurring field of the model.
+     */
+    public boolean getIsRecurring() {
+        return isRecurring;
+    }
+
+    /**
+     * Sets the isRecurring field of the model.
+     *
+     * @param recurring The boolean value which will be set.
+     */
+    private void setIsRecurring(boolean recurring) {
+        isRecurring = recurring;
+    }
+
+    /**
+     * @return Returns the period field of the model.
+     */
+    public Period getPeriod() {
+        return period;
+    }
+
+    /**
+     * Sets the period field of the model.
+     * The incoming period must be a greater than zero time period in order to be set.
+     * Sets the isRecurring field.
+     *
+     * @param period The period which will be set.
+     */
     public void setPeriod(Period period) {
         if (period == null || period.isZero())
             setIsRecurring(false);
@@ -132,51 +218,25 @@ public class FinancialRecordModel {
         this.period = period;
     }
 
+    /**
+     * @return Returns the user field of the model.
+     */
+    public UserModel getUser() {
+        return user;
+    }
+
+    /**
+     * Sets the user field of the model.
+     *
+     * @param user The user model which will be set.
+     */
     public void setUser(UserModel user) {
         this.user = user;
     }
 
-    //Withs
-    public FinancialRecordModel withId(int id) {
-        setId(id);
-        return this;
-    }
-
-    public FinancialRecordModel withName(String name) {
-        setName(name);
-        return this;
-    }
-
-    public FinancialRecordModel withIsIncome(boolean isIncome) {
-        setIsIncome(isIncome);
-        return this;
-    }
-
-    public FinancialRecordModel withAmount(double amount) {
-        setAmount(amount);
-        return this;
-    }
-
-    public FinancialRecordModel withDateOfCreation(LocalDateTime dateOfCreation) {
-        setDateOfCreation(dateOfCreation);
-        return this;
-    }
-
-    private FinancialRecordModel withIsRecurring(boolean isRecurring) {
-        setIsRecurring(isRecurring);
-        return this;
-    }
-
-    public FinancialRecordModel withPeriod(Period period) {
-        setPeriod(period);
-        return this;
-    }
-
-    public FinancialRecordModel withUser(UserModel user) {
-        setUser(user);
-        return this;
-    }
-
+    /**
+     * @return Returns a string representation of the object.
+     */
     @Override
     public String toString() {
         String result = "";

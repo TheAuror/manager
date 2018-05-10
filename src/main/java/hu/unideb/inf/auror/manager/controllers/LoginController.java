@@ -1,8 +1,8 @@
 package hu.unideb.inf.auror.manager.controllers;
 
 import hu.unideb.inf.auror.manager.DAOs.UserDAO;
+import hu.unideb.inf.auror.manager.Services.PasswordService;
 import hu.unideb.inf.auror.manager.models.UserModel;
-import hu.unideb.inf.auror.manager.utilities.PasswordUtil;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -23,12 +23,32 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for the login dialog.
+ */
 public class LoginController implements Initializable {
+    /**
+     * SLF4J Logger.
+     */
     private final static Logger logger = LoggerFactory.getLogger(LoginController.class);
+    /**
+     * JavaFX TextField.
+     */
     public TextField usernameTextField;
+    /**
+     * JavaFX PasswordField.
+     */
     public PasswordField passwordField;
+    /**
+     * JavaFX Label.
+     */
     public Label errorLabel;
 
+    /**
+     * Checks the given username and password in the database.
+     *
+     * @param actionEvent <code>ActionEvent</code>
+     */
     public void Login(ActionEvent actionEvent) {
         if(!CheckTextFields())
             return;
@@ -43,42 +63,54 @@ public class LoginController implements Initializable {
             return;
         }
         UserModel user = tmpUser.get();
-        if (PasswordUtil.comparePassword(user.getPassword(), password)) {
+        if (PasswordService.comparePassword(user.getPassword(), password)) {
             UserDAO.getInstance().SetCurrentUser(user);
             ((Node) (actionEvent.getSource())).getScene().getWindow().hide();
         } else {
             logger.info("Wrong password");
-            errorLabel.setText("Hibás felhasználónév!");
+            errorLabel.setText("Hibás jelszó!");
             errorLabel.setVisible(true);
+            return;
         }
-        SuccesfulLogin();
+        OpenMainView();
     }
 
-    public void Register(ActionEvent actionEvent) {
+    /**
+     * Creates a new user model with the text field's texts.
+     */
+    public void Register() {
+        UserDAO userDAO = UserDAO.getInstance();
         CheckTextFields();
         UserModel user = new UserModel();
         user.setName(usernameTextField.getText());
         user.setPassword(passwordField.getText());
-        UserDAO userDAO = UserDAO.getInstance();
+        if (userDAO.GetUsers().stream().anyMatch(e -> e.getName().equals(user.getName()))) {
+            logger.info("Username already taken!");
+            errorLabel.setText("A felhasználónév már foglalt!");
+            errorLabel.setVisible(true);
+            return;
+        }
         userDAO.Save(user);
-        SuccesfulLogin();
+        OpenMainView();
     }
 
+    /**
+     * Checks the text fields.
+     *
+     * @return Returns true if all the fields fulfill the requirements.
+     */
     private boolean CheckTextFields() {
-        if(usernameTextField.getText().isEmpty())
-        {
+        if (usernameTextField.getText().isEmpty()) {
             errorLabel.setText("Adjon meg egy felhasználó nevet!");
             errorLabel.setVisible(true);
             return false;
         }
-        if(passwordField.getText().isEmpty())
-        {
+        if (passwordField.getText().isEmpty()) {
             errorLabel.setText("Adjon meg egy jelszót!");
             errorLabel.setVisible(true);
             return false;
         }
-        if(passwordField.getText().length() < 4)
-        {
+        if (passwordField.getText().length() < 4) {
             errorLabel.setText("Túl rövid jelszó!");
             errorLabel.setVisible(true);
             return false;
@@ -86,7 +118,10 @@ public class LoginController implements Initializable {
         return true;
     }
 
-    private void SuccesfulLogin() {
+    /**
+     * Creates the main view and opens it.
+     */
+    private void OpenMainView() {
         Parent root = null;
         try {
             root = FXMLLoader.load(LoginController.class.getResource("/fxml/MainView.fxml"));
@@ -105,6 +140,13 @@ public class LoginController implements Initializable {
         stage.show();
     }
 
+    /**
+     * Initializes the controller.
+     * Sets the errorLabel's visibility to false.
+     *
+     * @param location  <code>URL</code>
+     * @param resources <code>ResourceBundle</code>
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         errorLabel.setVisible(false);

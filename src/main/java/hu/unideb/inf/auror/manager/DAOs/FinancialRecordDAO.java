@@ -40,46 +40,83 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Data Access Object for the <code>FinancialRecordModel</code> class.
+ */
 public class FinancialRecordDAO {
+    /**
+     * SLF4J logger.
+     */
     private final static Logger logger = LoggerFactory.getLogger(FinancialRecordDAO.class);
+    /**
+     * Boolean that indicates whether an instance has been initialized yet.
+     */
     private static boolean initialized = false;
+    /**
+     * Static instance of the DAO.
+     */
     private static FinancialRecordDAO financialRecordDAO;
-
-    private EntityManagerFactory entityManagerFactory;
+    /**
+     * The <code>EntityManager</code> which provides the connection to the database.
+     */
     private EntityManager entityManager;
+    /**
+     * The maximum id plus 1 of the FinancialRecordModels.
+     */
     private int nextRecordId = 0;
 
+    /**
+     * Basic constructor.
+     * Calls <code>Initialize()</code>
+     */
     private FinancialRecordDAO() {
         Initialize();
     }
 
+    /**
+     * @return Returns or creates the only FinancialRecordDAO object.
+     */
     public static FinancialRecordDAO getInstance() {
         if (!initialized)
             financialRecordDAO = new FinancialRecordDAO();
         return financialRecordDAO;
     }
 
-    private boolean Initialize() {
+    /**
+     * Initializes the DAO, creating an <code>EntityManager</code>.
+     */
+    private void Initialize() {
         try {
-            entityManagerFactory = Persistence.createEntityManagerFactory("AppPU");
+            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("AppPU");
             entityManager = entityManagerFactory.createEntityManager();
             initialized = true;
         } catch (Exception e) {
             initialized = false;
         }
-        return initialized;
     }
 
+    /**
+     * @return Returns true if the DAO is initialized.
+     */
     public boolean IsInitialized(){
         return initialized;
     }
 
+    /**
+     * @return Returns every record of the logged in user.
+     */
     public List<FinancialRecordModel> GetRecordsForUser() {
         return GetAllRecords().stream()
                 .filter(e -> e.getUser().getId() == UserDAO.getInstance().GetCurrentUser().getId())
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Returns every <code>FinancialRecordModel</code> from the database.
+     * Calls <code>createRecurringTransactions()</code>
+     *
+     * @return Returns a List of <code>FinancialRecordModel</code>s
+     */
     public List<FinancialRecordModel> GetAllRecords() {
         if(!initialized)
             return new ArrayList<>();
@@ -88,12 +125,22 @@ public class FinancialRecordDAO {
         return query.getResultList();
     }
 
+    /**
+     * @return Returns the maximum id from the FINANCIAL_RECORDS table plus 1.
+     */
     private int getNextId() {
         Optional<Integer> maxId = GetAllRecords().stream().map(FinancialRecordModel::getId).max(Integer::compareTo);
         maxId.ifPresent(integer -> nextRecordId = integer + 1);
         return nextRecordId;
     }
 
+    /**
+     * Saves or edits the given record based on its id.
+     * If the id is not -1 it will be edited,
+     * because every new record is created with an id -1.
+     *
+     * @param record The record which will be saved or edited.
+     */
     public void Save(FinancialRecordModel record) {
         if (record.getDateOfCreation() == null)
             record.setDateOfCreation(LocalDateTime.now());
@@ -111,37 +158,50 @@ public class FinancialRecordDAO {
         }
     }
 
+    /**
+     * Deletes a given record from the database.
+     *
+     * @param record The record which will be deleted.
+     */
     public void Delete(FinancialRecordModel record) {
         entityManager.getTransaction().begin();
         entityManager.remove(record);
         entityManager.getTransaction().commit();
     }
 
-    private boolean createRecurringTransactions(List<FinancialRecordModel> recordModels) {
-        boolean addedRecord = false;
+    /**
+     * Selects the recurring records from the given list and calls
+     * the <code>createRecurringTransaction</code> on each of them.
+     *
+     * @param recordModels List of <code>FinancialRecordModel</code>s
+     */
+    private void createRecurringTransactions(List<FinancialRecordModel> recordModels) {
         List<FinancialRecordModel> records = recordModels.stream()
                 .filter(FinancialRecordModel::getIsRecurring).collect(Collectors.toCollection(ArrayList::new));
         for (FinancialRecordModel record : records) {
-            addedRecord |= createRecurringTransaction(record);
+            createRecurringTransaction(record);
         }
-        return addedRecord;
     }
 
-    private boolean createRecurringTransaction(FinancialRecordModel record) {
+    /**
+     * Creates new financial records based on the given parameter.
+     * Recursive
+     *
+     * @param record Periodical financial record
+     */
+    private void createRecurringTransaction(FinancialRecordModel record) {
         if (record.getDateOfCreation().plus(record.getPeriod()).isBefore(LocalDateTime.now())) {
-            FinancialRecordModel newRecord = new FinancialRecordModel()
-                    .withName(record.getName())
-                    .withAmount(record.getAmount())
-                    .withDateOfCreation(record.getDateOfCreation().plus(record.getPeriod()))
-                    .withIsIncome(record.getIsIncome())
-                    .withPeriod(record.getPeriod())
-                    .withUser(record.getUser());
+            FinancialRecordModel newRecord = new FinancialRecordModel();
+            newRecord.setName(record.getName());
+            newRecord.setAmount(record.getAmount());
+            newRecord.setDateOfCreation(record.getDateOfCreation().plus(record.getPeriod()));
+            newRecord.setIsIncome(record.getIsIncome());
+            newRecord.setPeriod(record.getPeriod());
+            newRecord.setUser(record.getUser());
             record.setPeriod(null);
             Save(record);
             Save(newRecord);
             createRecurringTransaction(newRecord);
-            return true;
         }
-        return false;
     }
 }
