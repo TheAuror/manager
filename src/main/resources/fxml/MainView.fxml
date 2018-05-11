@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
 <?import javafx.geometry.Point3D?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" minHeight="600.0" minWidth="800.0" xmlns="http://javafx.com/javafx/8"
-            fx:controller="hu.unideb.inf.auror.manager.controllers.MainController">
+
+<AnchorPane minHeight="600.0" minWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hu.unideb.inf.auror.manager.controllers.MainController">
     <children>
-        <VBox prefHeight="407.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-              AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <VBox prefHeight="407.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
                 <AnchorPane prefHeight="19.0" prefWidth="800.0" VBox.vgrow="NEVER">
                     <children>
@@ -15,20 +18,19 @@
                             <menus>
                                 <Menu mnemonicParsing="false" text="File">
                                     <items>
-                                        <MenuItem fx:id="menuCloseItem" mnemonicParsing="false"
-                                                  onAction="#closeApplication" text="Close"/>
+                                        <MenuItem fx:id="menuCloseItem" mnemonicParsing="false" onAction="#closeApplication" text="Close" />
                                     </items>
                                 </Menu>
                                 <Menu mnemonicParsing="false" text="Edit">
                                     <items>
-                                        <MenuItem mnemonicParsing="false" onAction="#createNewRecord" text="New"/>
-                                        <MenuItem mnemonicParsing="false" onAction="#editRecord" text="Edit"/>
-                                        <MenuItem mnemonicParsing="false" onAction="#deleteRecord" text="Delete"/>
+                                        <MenuItem mnemonicParsing="false" onAction="#createNewRecord" text="New" />
+                                        <MenuItem mnemonicParsing="false" onAction="#editRecord" text="Edit" />
+                                        <MenuItem mnemonicParsing="false" onAction="#deleteRecord" text="Delete" />
                                     </items>
                                 </Menu>
                                 <Menu mnemonicParsing="false" text="Help">
                                     <items>
-                                        <MenuItem mnemonicParsing="false" text="About"/>
+                                        <MenuItem mnemonicParsing="false" text="About" />
                                     </items>
                                 </Menu>
                             </menus>
@@ -39,12 +41,10 @@
                     <children>
                         <AnchorPane prefHeight="37.0" prefWidth="625.0" HBox.hgrow="ALWAYS">
                             <children>
-                                <Label text="Kezdő dátum:" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="8.0"/>
-                                <DatePicker fx:id="dateTimeBegin" onAction="#refreshData" AnchorPane.leftAnchor="85.0"
-                                            AnchorPane.topAnchor="5.0"/>
-                                <Label text="Vég dátum:" AnchorPane.rightAnchor="190.0" AnchorPane.topAnchor="8.0"/>
-                                <DatePicker fx:id="dateTimeEnd" onAction="#refreshData" AnchorPane.rightAnchor="5.0"
-                                            AnchorPane.topAnchor="5.0"/>
+                                <Label text="Kezdő dátum:" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="8.0" />
+                                <DatePicker fx:id="dateTimeBegin" onAction="#refreshData" AnchorPane.leftAnchor="85.0" AnchorPane.topAnchor="5.0" />
+                                <Label text="Vég dátum:" AnchorPane.rightAnchor="190.0" AnchorPane.topAnchor="8.0" />
+                                <DatePicker fx:id="dateTimeEnd" onAction="#refreshData" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
                             </children>
                         </AnchorPane>
                     </children>
@@ -53,13 +53,26 @@
                     <children>
                         <AnchorPane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                             <children>
-                                <TableView fx:id="tableView" prefHeight="330.0" prefWidth="339.0"
-                                           AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0"
-                                           AnchorPane.rightAnchor="250.0" AnchorPane.topAnchor="5.0">
+                                <TableView fx:id="tableView" prefHeight="330.0" prefWidth="339.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="250.0" AnchorPane.topAnchor="5.0">
                                     <rotationAxis>
-                                        <Point3D y="1.0"/>
+                                        <Point3D y="1.0" />
                                     </rotationAxis>
                                 </TableView>
+                        <Label layoutX="559.0" layoutY="14.0" text="Statisztikák az adott időszakra:" AnchorPane.rightAnchor="66.0" AnchorPane.topAnchor="14.0">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                           <padding>
+                              <Insets bottom="5.0" />
+                           </padding>
+                        </Label>
+                        <Label layoutX="572.0" layoutY="38.0" text="Bevételek összege:" AnchorPane.rightAnchor="129.0" AnchorPane.topAnchor="38.0" />
+                        <Label fx:id="sumOfIncomesLabel" layoutX="572.0" layoutY="55.0" maxWidth="150.0" minWidth="150.0" text="#Hiba" textFill="#20ab32" AnchorPane.rightAnchor="78.0" AnchorPane.topAnchor="55.0" />
+                        <Label layoutX="574.0" layoutY="72.0" text="Kiadások összege:" AnchorPane.rightAnchor="131.0" AnchorPane.topAnchor="72.0" />
+                        <Label fx:id="sumOfExpensesLabel" layoutX="572.0" layoutY="89.0" maxWidth="150.0" minWidth="150.0" text="#Hiba" textFill="#ee0000" AnchorPane.rightAnchor="78.0" AnchorPane.topAnchor="89.0" />
+                        <Label fx:id="surplusOrDeficitLabel" layoutX="572.0" layoutY="106.0" maxHeight="17.0" maxWidth="83.0" minHeight="17.0" minWidth="83.0" prefHeight="17.0" prefWidth="83.0" text="Többlet / hiány:" AnchorPane.rightAnchor="145.0" AnchorPane.topAnchor="106.0" />
+                        <Label fx:id="totalSumLabel" layoutX="572.0" layoutY="123.0" maxWidth="150.0" minWidth="150.0" text="#Hiba" AnchorPane.rightAnchor="78.0" AnchorPane.topAnchor="123.0" />
+                        <Label layoutX="559.0" layoutY="147.0" text="Átlagok:" AnchorPane.rightAnchor="197.0" AnchorPane.topAnchor="147.0" />
                             </children>
                         </AnchorPane>
                     </children>

@@ -27,6 +27,7 @@ package hu.unideb.inf.auror.manager.controllers;
  */
 
 import hu.unideb.inf.auror.manager.DAOs.FinancialRecordDAO;
+import hu.unideb.inf.auror.manager.Services.StatisticsService;
 import hu.unideb.inf.auror.manager.models.FinancialRecordModel;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -42,6 +43,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -65,6 +67,9 @@ public class MainController implements Initializable {
      */
     private final static Logger logger = LoggerFactory.getLogger(MainController.class);
 
+    private static String incomeStyle = "-fx-background-color:lightgreen";
+    private static String expenseStyle = "-fx-background-color:indianred";
+
 
     /**
      * JavaFX TableView.
@@ -78,6 +83,10 @@ public class MainController implements Initializable {
      * JavaFX DatePicker.
      */
     public DatePicker dateTimeEnd;
+    public Label sumOfIncomesLabel;
+    public Label sumOfExpensesLabel;
+    public Label surplusOrDeficitLabel;
+    public Label totalSumLabel;
 
     /**
      * Data access object for the financial records.
@@ -111,7 +120,27 @@ public class MainController implements Initializable {
                         (e.getDateOfCreation().isBefore(getEndDate()) ||
                                 e.getDateOfCreation().isEqual(getEndDate())))
                 .collect(Collectors.toCollection(ArrayList::new)));
+        calculateStatistics();
         timeline.play();
+    }
+
+    private void calculateStatistics() {
+        sumOfIncomesLabel.setText(StatisticsService.getSumOfIncome(records) + " Ft");
+        sumOfExpensesLabel.setText(StatisticsService.getSumOfExpenses(records) + " Ft");
+        double totalSum = StatisticsService.getTotalSum(records);
+        totalSumLabel.setText(totalSum + " Ft");
+        if(totalSum > 0)
+        {
+            surplusOrDeficitLabel.setText("Többlet:");
+            totalSumLabel.setTextFill(Paint.valueOf("#20ab32"));
+        }
+        if(totalSum < 0)
+        {
+            surplusOrDeficitLabel.setText("Hiány:");
+            totalSumLabel.setTextFill(Paint.valueOf("#ee0000"));
+        }
+        surplusOrDeficitLabel.setVisible(totalSum != 0);
+        totalSumLabel.setVisible(totalSum != 0);
     }
 
     /**
@@ -170,10 +199,10 @@ public class MainController implements Initializable {
                 }
                 if (record.getIsIncome()) {
                     setTextFill(Color.GREEN);
-                    setStyle("-fx-background-color:lightgreen");
+                    setStyle(incomeStyle);
                 } else {
                     setTextFill(Color.RED);
-                    setStyle("-fx-background-color:indianred");
+                    setStyle(expenseStyle);
                 }
             }
         });
