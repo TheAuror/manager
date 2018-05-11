@@ -72,7 +72,7 @@ public class Main extends Application {
             logger.error(e.getMessage());
             return;
         }
-        primaryStage.setTitle("Financial manager" + (dao.IsInitialized() ? "" : " [Database Error]"));
+        primaryStage.setTitle((dao.IsInitialized() ? "Login" : "[Database Error]"));
         primaryStage.setOnCloseRequest(e ->
         {
             Platform.exit();
