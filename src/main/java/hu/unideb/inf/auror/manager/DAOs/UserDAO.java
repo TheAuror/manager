@@ -72,7 +72,7 @@ public class UserDAO {
      * Basic constructor.
      * Calls <code>Initialize()</code>
      */
-    public UserDAO() {
+    private UserDAO() {
         Initialize();
     }
 
@@ -90,7 +90,7 @@ public class UserDAO {
      */
     private void Initialize() {
         try {
-            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("AppPU");
+            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("Firebird server");
             entityManager = entityManagerFactory.createEntityManager();
             initialized = true;
             if (GetUsers().isEmpty()) {
@@ -100,8 +100,10 @@ public class UserDAO {
                 Save(defaultUser);
             }
         } catch (Exception e) {
+            logger.error(e.getMessage());
             initialized = false;
         }
+        logger.trace("UserDAO initialized.");
     }
 
     /**
@@ -110,6 +112,7 @@ public class UserDAO {
      * @return Returns a List of <code>UserModel</code>s
      */
     public List<UserModel> GetUsers() {
+        logger.trace("UsedDAO.GetUsers()");
         if (!initialized)
             return new ArrayList<>();
         TypedQuery<UserModel> query = entityManager.createQuery("SELECT e FROM UserModel e", UserModel.class);
@@ -120,6 +123,7 @@ public class UserDAO {
      * @return Returns the maximum id from the USERS table plus 1.
      */
     private int getNextId() {
+        logger.trace("UserDAO.getNextId()");
         Optional<Integer> maxId = GetUsers().stream().map(UserModel::getId).max(Integer::compareTo);
         maxId.ifPresent(integer -> nextRecordId = integer + 1);
         return nextRecordId;
@@ -138,12 +142,13 @@ public class UserDAO {
             entityManager.getTransaction().commit();
         }
         currentUser = user;
+        logger.info("New user is created and logged in: "+user.getName());
     }
 
     /**
      * @return Returns the logged in user.
      */
-    public UserModel GetCurrentUser() {
+    UserModel GetCurrentUser() {
         return currentUser;
     }
 
@@ -154,5 +159,6 @@ public class UserDAO {
      */
     public void SetCurrentUser(UserModel user) {
         currentUser = user;
+        logger.info("User logged in: "+user.getName());
     }
 }

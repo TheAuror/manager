@@ -34,6 +34,8 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.util.converter.DoubleStringConverter;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.time.Period;
@@ -44,6 +46,10 @@ import java.util.regex.Pattern;
  * Controller for the dialog, that allows the user to create or edit a <code>FinancialRecordModel</code>.
  */
 public class EditorController implements Initializable {
+    /**
+     * SLF4J Logger.
+     */
+    private final static Logger logger = LoggerFactory.getLogger(EditorController.class);
     /**
      * Static string for "A year" in hungarian.
      */
@@ -122,7 +128,10 @@ public class EditorController implements Initializable {
         editedRecord.setIsIncome(isIncomeCheckBox.isSelected());
         if (dateOfCreationPicker.getValue() != null)
             editedRecord.setDateOfCreation(dateOfCreationPicker.getValue().atStartOfDay());
-        editedRecord.setPeriod(getPeriod());
+        if (!isRecurringCheckBox.isSelected())
+            editedRecord.setPeriod(null);
+        else
+            editedRecord.setPeriod(convertToPeriod());
         return editedRecord;
     }
 
@@ -157,7 +166,7 @@ public class EditorController implements Initializable {
      * @return Returns Period according to the selected value.
      */
     @Nullable
-    private Period getPeriod() {
+    private Period convertToPeriod() {
         Period period = null;
         if (!isRecurringCheckBox.isSelected())
             return null;
@@ -195,6 +204,7 @@ public class EditorController implements Initializable {
      * Adds the items to the intervalChoiceBox.
      */
     private void initChoiceBox() {
+        logger.trace("Initializing intervalChoiceBox");
         intervalChoiceBox.getItems().add(YEAR);
         intervalChoiceBox.getItems().add(MONTH);
         intervalChoiceBox.getItems().add(WEEK);
@@ -221,6 +231,7 @@ public class EditorController implements Initializable {
      * <code>TextFormatter</code> which applies it.
      */
     private void initRecordAmountTextField() {
+        logger.trace("Initializing recordAmountTextField");
         Pattern validDoubleText = Pattern.compile(fpRegex);
         TextFormatter<Double> textFormatter = new TextFormatter<>(new DoubleStringConverter(), 0.0,
                 change -> {

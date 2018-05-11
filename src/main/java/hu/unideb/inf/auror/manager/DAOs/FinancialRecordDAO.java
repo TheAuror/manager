@@ -87,12 +87,14 @@ public class FinancialRecordDAO {
      */
     private void Initialize() {
         try {
-            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("AppPU");
+            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("Firebird server");
             entityManager = entityManagerFactory.createEntityManager();
             initialized = true;
         } catch (Exception e) {
+            logger.error(e.getMessage());
             initialized = false;
         }
+        logger.trace("FinancialRecordDAO is initialized.");
     }
 
     /**
@@ -129,6 +131,7 @@ public class FinancialRecordDAO {
      * @return Returns the maximum id from the FINANCIAL_RECORDS table plus 1.
      */
     private int getNextId() {
+        logger.trace("FinancialRecordDAO.getNextId()");
         Optional<Integer> maxId = GetAllRecords().stream().map(FinancialRecordModel::getId).max(Integer::compareTo);
         maxId.ifPresent(integer -> nextRecordId = integer + 1);
         return nextRecordId;
@@ -151,10 +154,12 @@ public class FinancialRecordDAO {
             entityManager.getTransaction().begin();
             entityManager.persist(record);
             entityManager.getTransaction().commit();
+            logger.info("The record is created.");
         } else {
             entityManager.getTransaction().begin();
             entityManager.merge(record);
             entityManager.getTransaction().commit();
+            logger.info("The record is edited.");
         }
     }
 
@@ -167,6 +172,7 @@ public class FinancialRecordDAO {
         entityManager.getTransaction().begin();
         entityManager.remove(record);
         entityManager.getTransaction().commit();
+        logger.info("The record is deleted.");
     }
 
     /**
@@ -176,6 +182,7 @@ public class FinancialRecordDAO {
      * @param recordModels List of <code>FinancialRecordModel</code>s
      */
     private void createRecurringTransactions(List<FinancialRecordModel> recordModels) {
+        logger.trace("Creating recurring transactions.");
         List<FinancialRecordModel> records = recordModels.stream()
                 .filter(FinancialRecordModel::getIsRecurring).collect(Collectors.toCollection(ArrayList::new));
         for (FinancialRecordModel record : records) {
@@ -201,6 +208,7 @@ public class FinancialRecordDAO {
             record.setPeriod(null);
             Save(record);
             Save(newRecord);
+            logger.trace("New recurring record is created.");
             createRecurringTransaction(newRecord);
         }
     }

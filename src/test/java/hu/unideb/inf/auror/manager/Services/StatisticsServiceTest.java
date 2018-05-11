@@ -12,10 +12,10 @@ package hu.unideb.inf.auror.manager.Services;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -27,7 +27,6 @@ package hu.unideb.inf.auror.manager.Services;
  */
 
 import hu.unideb.inf.auror.manager.models.FinancialRecordModel;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,27 +38,58 @@ public class StatisticsServiceTest {
     private List<FinancialRecordModel> records;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         records = new ArrayList<>();
-        FinancialRecordModel record = new FinancialRecordModel();
-        record.setIsIncome(true);
-        record.setAmount(140);
-        records.add(record);
-    }
-
-    @After
-    public void tearDown() throws Exception {
+        records.add(new FinancialRecordModel(true,90));
+        records.add(new FinancialRecordModel(true,110));
+        records.add(new FinancialRecordModel(false,170));
+        records.add(new FinancialRecordModel(false,30));
+        records.add(new FinancialRecordModel(true,298));
+        records.add(new FinancialRecordModel(true,2));
+        records.add(new FinancialRecordModel(false,100));
+        records.add(new FinancialRecordModel(false,100));
+        records.add(new FinancialRecordModel(true,100));
     }
 
     @Test
     public void getSumOfIncome() {
         double sum = StatisticsService.getSumOfIncome(records);
-        Assert.assertEquals(140, sum, 0);
+        Assert.assertEquals(600, sum, 0);
+        assert StatisticsService.getSumOfIncome(new ArrayList<>())==0;
     }
 
     @Test
     public void getSumOfExpenses() {
         double sum = StatisticsService.getSumOfExpenses(records);
-        Assert.assertEquals(0, sum, 0);
+        Assert.assertEquals(400, sum, 0);
+        assert StatisticsService.getSumOfExpenses(new ArrayList<>())==0;
+    }
+
+    @Test
+    public void getTotalSum() {
+        double sum = StatisticsService.getTotalSum(records);
+        Assert.assertEquals(200, sum, 0);
+        assert StatisticsService.getTotalSum(new ArrayList<>())==0;
+    }
+
+    @Test
+    public void getAverage() {
+        double sum = StatisticsService.getAverage(records);
+        Assert.assertEquals(22, sum, 0.3);
+        assert StatisticsService.getAverage(new ArrayList<>())==0;
+    }
+
+    @Test
+    public void getAverageOfIncome() {
+        double sum = StatisticsService.getAverageOfIncome(records);
+        Assert.assertEquals(120, sum, 0);
+        assert StatisticsService.getAverageOfIncome(new ArrayList<>())==0;
+    }
+
+    @Test
+    public void getAverageOfExpenses() {
+        double sum = StatisticsService.getAverageOfExpenses(records);
+        Assert.assertEquals(100, sum, 0);
+        assert StatisticsService.getAverageOfExpenses(new ArrayList<>())==0;
     }
 }

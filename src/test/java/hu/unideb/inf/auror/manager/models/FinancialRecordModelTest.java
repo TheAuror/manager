@@ -26,16 +26,12 @@ package hu.unideb.inf.auror.manager.models;
  * #L%
  */
 
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Period;
-
-import static org.junit.Assert.*;
 
 public class FinancialRecordModelTest {
     private FinancialRecordModel record;
@@ -114,6 +110,8 @@ public class FinancialRecordModelTest {
     @Test
     public void getIsRecurring() {
         assert record.getIsRecurring();
+        record.setPeriod(null);
+        assert !record.getIsRecurring();
     }
 
     @Test
@@ -125,6 +123,8 @@ public class FinancialRecordModelTest {
     public void setPeriod() {
         record.setPeriod(Period.ofYears(1));
         assert record.getPeriod().equals(Period.ofYears(1));
+        record.setPeriod(null);
+        assert !record.getIsRecurring();
     }
 
     @Test

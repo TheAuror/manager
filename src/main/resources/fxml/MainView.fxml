@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.paint.*?>
-<?import javafx.scene.text.*?>
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.geometry.Point3D?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
+<?import javafx.scene.text.Font?>
 <AnchorPane minHeight="600.0" minWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hu.unideb.inf.auror.manager.controllers.MainController">
     <children>
         <VBox prefHeight="407.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -18,7 +15,7 @@
                             <menus>
                                 <Menu mnemonicParsing="false" text="File">
                                     <items>
-                                        <MenuItem fx:id="menuCloseItem" mnemonicParsing="false" onAction="#closeApplication" text="Close" />
+                                        <MenuItem mnemonicParsing="false" onAction="#closeApplication" text="Close" />
                                     </items>
                                 </Menu>
                                 <Menu mnemonicParsing="false" text="Edit">
@@ -26,11 +23,6 @@
                                         <MenuItem mnemonicParsing="false" onAction="#createNewRecord" text="New" />
                                         <MenuItem mnemonicParsing="false" onAction="#editRecord" text="Edit" />
                                         <MenuItem mnemonicParsing="false" onAction="#deleteRecord" text="Delete" />
-                                    </items>
-                                </Menu>
-                                <Menu mnemonicParsing="false" text="Help">
-                                    <items>
-                                        <MenuItem mnemonicParsing="false" text="About" />
                                     </items>
                                 </Menu>
                             </menus>
@@ -73,6 +65,12 @@
                         <Label fx:id="surplusOrDeficitLabel" layoutX="572.0" layoutY="106.0" maxHeight="17.0" maxWidth="83.0" minHeight="17.0" minWidth="83.0" prefHeight="17.0" prefWidth="83.0" text="Többlet / hiány:" AnchorPane.rightAnchor="145.0" AnchorPane.topAnchor="106.0" />
                         <Label fx:id="totalSumLabel" layoutX="572.0" layoutY="123.0" maxWidth="150.0" minWidth="150.0" text="#Hiba" AnchorPane.rightAnchor="78.0" AnchorPane.topAnchor="123.0" />
                         <Label layoutX="559.0" layoutY="147.0" text="Átlagok:" AnchorPane.rightAnchor="197.0" AnchorPane.topAnchor="147.0" />
+                        <Label layoutX="570.0" layoutY="171.0" text="Bevételek átlaga:" AnchorPane.rightAnchor="141.0" AnchorPane.topAnchor="171.0" />
+                        <Label fx:id="averageOfIncomesLabel" layoutX="572.0" layoutY="188.0" maxWidth="150.0" minWidth="150.0" text="#Hiba" textFill="#20ab32" AnchorPane.rightAnchor="78.0" AnchorPane.topAnchor="188.0" />
+                        <Label layoutX="571.0" layoutY="205.0" text="Kiadások átlaga:" AnchorPane.rightAnchor="143.0" AnchorPane.topAnchor="205.0" />
+                        <Label fx:id="averageOfExpensesLabel" layoutX="572.0" layoutY="222.0" maxWidth="150.0" minWidth="150.0" text="#Hiba" textFill="#ee0000" AnchorPane.rightAnchor="78.0" AnchorPane.topAnchor="222.0" />
+                        <Label layoutX="578.0" layoutY="239.0" text="Átlag:" AnchorPane.rightAnchor="197.0" AnchorPane.topAnchor="239.0" />
+                        <Label fx:id="averageLabel" layoutX="572.0" layoutY="256.0" maxWidth="150.0" minWidth="150.0" text="#Hiba" AnchorPane.rightAnchor="78.0" AnchorPane.topAnchor="256.0" />
                             </children>
                         </AnchorPane>
                     </children>

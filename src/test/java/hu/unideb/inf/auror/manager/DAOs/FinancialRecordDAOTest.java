@@ -1,4 +1,4 @@
-package hu.unideb.inf.auror.manager.Services;
+package hu.unideb.inf.auror.manager.DAOs;
 
 /*-
  * #%L
@@ -26,27 +26,28 @@ package hu.unideb.inf.auror.manager.Services;
  * #L%
  */
 
+import org.junit.Assume;
+import org.junit.Before;
 import org.junit.Test;
 
-public class PasswordServiceTest {
+public class FinancialRecordDAOTest {
+    private FinancialRecordDAO dao;
 
-    @Test
-    public void comparePassword() {
-        String pw = PasswordService.hashPassword("password", "");
-        assert PasswordService.comparePassword(pw, "password");
-        assert !PasswordService.comparePassword(pw, "pword");
+    @Before
+    public void setUp() throws Exception {
+        dao = FinancialRecordDAO.getInstance();
+        Assume.assumeTrue(dao.IsInitialized());
     }
 
     @Test
-    public void hashPassword() {
-        String pw1 = PasswordService.hashPassword("password", "");
-        String pw2 = PasswordService.hashPassword("password", "");
-        assert !pw1.equals(pw2);
-        pw1 = PasswordService.hashPassword("password", "salt");
-        pw2 = PasswordService.hashPassword("1234", "salt");
-        assert !pw1.equals(pw2);
-        pw1 = PasswordService.hashPassword("password", "salt");
-        pw2 = PasswordService.hashPassword("password", "salt");
-        assert pw1.equals(pw2);
+    public void getInstance() {
+        FinancialRecordDAO newDao = FinancialRecordDAO.getInstance();
+        assert newDao != null;
+        assert newDao == dao;
+    }
+
+    @Test
+    public void isInitialized() {
+        assert dao.IsInitialized();
     }
 }

@@ -67,7 +67,13 @@ public class MainController implements Initializable {
      */
     private final static Logger logger = LoggerFactory.getLogger(MainController.class);
 
+    /**
+     * Contains the style used on the records that are an income.
+     */
     private static String incomeStyle = "-fx-background-color:lightgreen";
+    /**
+     * Contains the style used on the records that are an expense.
+     */
     private static String expenseStyle = "-fx-background-color:indianred";
 
 
@@ -83,10 +89,41 @@ public class MainController implements Initializable {
      * JavaFX DatePicker.
      */
     public DatePicker dateTimeEnd;
+    /**
+     * JavaFX Label.
+     * Displays the sum of the incomes.
+     */
     public Label sumOfIncomesLabel;
+    /**
+     * JavaFX Label.
+     * Displays the sum of the expenses.
+     */
     public Label sumOfExpensesLabel;
+    /**
+     * JavaFX Label.
+     * Displays if the given time period is in surplus or deficit.
+     */
     public Label surplusOrDeficitLabel;
+    /**
+     * JavaFX Label.
+     * Displays the sum of the records.
+     */
     public Label totalSumLabel;
+    /**
+     * JavaFX Label.
+     * Displays the average of the incomes.
+     */
+    public Label averageOfIncomesLabel;
+    /**
+     * JavaFX Label.
+     * Displays the average of the incomes.
+     */
+    public Label averageOfExpensesLabel;
+    /**
+     * JavaFX Label.
+     * Displays the average of the records.
+     */
+    public Label averageLabel;
 
     /**
      * Data access object for the financial records.
@@ -124,6 +161,9 @@ public class MainController implements Initializable {
         timeline.play();
     }
 
+    /**
+     * Sets the corresponding statistical values to its labels.
+     */
     private void calculateStatistics() {
         sumOfIncomesLabel.setText(StatisticsService.getSumOfIncome(records) + " Ft");
         sumOfExpensesLabel.setText(StatisticsService.getSumOfExpenses(records) + " Ft");
@@ -141,6 +181,9 @@ public class MainController implements Initializable {
         }
         surplusOrDeficitLabel.setVisible(totalSum != 0);
         totalSumLabel.setVisible(totalSum != 0);
+        averageOfIncomesLabel.setText(StatisticsService.getAverageOfIncome(records)+ " Ft");
+        averageOfExpensesLabel.setText(StatisticsService.getAverageOfExpenses(records) + " Ft");
+        averageLabel.setText(StatisticsService.getAverage(records)+ " Ft");
     }
 
     /**

@@ -30,18 +30,17 @@
              xmlns="http://java.sun.com/xml/ns/persistence"
              xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
    http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
-
-    <persistence-unit name="AppPU">
+    <persistence-unit name="Firebird server">
         <properties>
             <!-- Remote DB 94.21.173.23-->
             <property name="hibernate.connection.url"
-                      value="jdbc:firebirdsql:80.99.220.245/3050:DB?charSet=utf-8"/>
+                      value="jdbc:firebirdsql:${serverIP}/3050:DB?charSet=utf-8"/>
             <!-- Local DB
             <property name="hibernate.connection.url"
                       value="jdbc:firebirdsql:localhost/3050:DB?charSet=utf-8"/>-->
             <property name="hibernate.connection.driver_class" value="org.firebirdsql.jdbc.FBDriver"/>
-            <property name="hibernate.connection.username" value="SYSDBA"/>
-            <property name="hibernate.connection.password" value="admin"/>
+            <property name="hibernate.connection.username" value="${username}"/>
+            <property name="hibernate.connection.password" value="${password}"/>
             <property name="hibernate.archive.autodetection" value="class"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
         </properties>

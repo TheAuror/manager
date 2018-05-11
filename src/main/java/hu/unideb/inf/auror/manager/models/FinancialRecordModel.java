@@ -94,6 +94,17 @@ public class FinancialRecordModel {
     }
 
     /**
+     * Basic constructor with two parameters used only in the tests.
+     *
+     * @param isIncome If true the record will be an income.
+     * @param amount The amount of the record.
+     */
+    public FinancialRecordModel(boolean isIncome, double amount) {
+        setIsIncome(isIncome);
+        setAmount(amount);
+    }
+
+    /**
      * @return Returns the id field of the model.
      */
     public int getId() {
@@ -185,6 +196,7 @@ public class FinancialRecordModel {
 
     /**
      * Sets the isRecurring field of the model.
+     * The isRecurring value is only set when the models period is set.
      *
      * @param recurring The boolean value which will be set.
      */

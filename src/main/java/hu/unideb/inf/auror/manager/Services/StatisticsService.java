@@ -85,7 +85,12 @@ public class StatisticsService {
      */
     public static double getAverage(List<FinancialRecordModel> records) {
         return records.stream()
-                .mapToDouble(FinancialRecordModel::getAmount)
+                .mapToDouble(record -> {
+                    if(record.getIsIncome())
+                        return record.getAmount();
+                    else
+                        return -record.getAmount();
+                })
                 .average().orElse(0);
     }
 
