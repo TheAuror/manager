@@ -1,37 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="252.0" prefWidth="368.0" xmlns="http://javafx.com/javafx/8"
-            fx:controller="hu.unideb.inf.auror.manager.controllers.EditorController">
+<AnchorPane prefHeight="252.0" prefWidth="368.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hu.unideb.inf.auror.manager.controllers.EditorController">
     <children>
         <VBox prefHeight="252.0" prefWidth="367.0">
             <children>
                 <Label text="Tétel neve:">
                     <padding>
-                        <Insets left="5.0" right="5.0" top="5.0"/>
+                        <Insets left="5.0" right="5.0" top="5.0" />
                     </padding>
                 </Label>
                 <TextField fx:id="recordNameTextField" prefHeight="27.0" prefWidth="349.0">
                     <padding>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                     </padding>
                     <VBox.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                     </VBox.margin>
                 </TextField>
                 <HBox prefHeight="32.0" prefWidth="600.0">
                     <children>
                         <Label text="Összeg:">
                             <padding>
-                                <Insets left="5.0" right="5.0" top="5.0"/>
+                                <Insets left="5.0" right="5.0" top="5.0" />
                             </padding>
                         </Label>
                         <TextField fx:id="recordAmountTextField" prefHeight="27.0" prefWidth="310.0">
                             <padding>
-                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                             </padding>
                         </TextField>
                     </children>
@@ -40,12 +38,12 @@
                     <children>
                         <Label text="Bevétel:">
                             <padding>
-                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                             </padding>
                         </Label>
                         <CheckBox fx:id="isIncomeCheckBox" mnemonicParsing="false">
                             <padding>
-                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                             </padding>
                         </CheckBox>
                     </children>
@@ -56,12 +54,12 @@
                             <children>
                                 <Label text="Keletkezés ideje:">
                                     <padding>
-                                        <Insets bottom="5.0" left="5.0" right="5.0" top="3.0"/>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="3.0" />
                                     </padding>
                                 </Label>
                                 <DatePicker fx:id="dateOfCreationPicker">
                                     <VBox.margin>
-                                        <Insets left="5.0"/>
+                                        <Insets left="5.0" />
                                     </VBox.margin>
                                 </DatePicker>
                             </children>
@@ -70,12 +68,12 @@
                             <children>
                                 <Label fx:id="intervalLabel" text="Intervallum:">
                                     <padding>
-                                        <Insets bottom="5.0" left="5.0" right="5.0" top="3.0"/>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="3.0" />
                                     </padding>
                                 </Label>
                                 <ChoiceBox fx:id="intervalChoiceBox" prefHeight="25.0" prefWidth="181.0">
                                     <VBox.margin>
-                                        <Insets bottom="5.0" left="5.0" right="5.0"/>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" />
                                     </VBox.margin>
                                 </ChoiceBox>
                             </children>
@@ -86,12 +84,12 @@
                     <children>
                         <Label text="Rendszeres tétel:">
                             <padding>
-                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                             </padding>
                         </Label>
                         <CheckBox fx:id="isRecurringCheckBox" mnemonicParsing="false" onAction="#isRecurringChecked">
                             <HBox.margin>
-                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                             </HBox.margin>
                         </CheckBox>
                     </children>
@@ -100,10 +98,8 @@
                     <children>
                         <AnchorPane prefHeight="39.0" prefWidth="431.0">
                             <children>
-                                <Button fx:id="cancelButton" layoutX="358.0" layoutY="7.0" mnemonicParsing="false"
-                                        onAction="#cancel" text="Elvetés" AnchorPane.rightAnchor="14.0"/>
-                                <Button fx:id="saveButton" layoutX="14.0" layoutY="7.0" mnemonicParsing="false"
-                                        onAction="#saveRecord" text="Rögzítés"/>
+                                <Button fx:id="cancelButton" layoutX="358.0" layoutY="7.0" mnemonicParsing="false" onAction="#cancel" text="Elvetés" AnchorPane.rightAnchor="14.0" />
+                                <Button fx:id="saveButton" layoutX="14.0" layoutY="7.0" mnemonicParsing="false" onAction="#saveRecord" text="Rögzítés" />
                             </children>
                         </AnchorPane>
                     </children>

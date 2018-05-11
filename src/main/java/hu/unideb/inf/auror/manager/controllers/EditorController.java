@@ -68,10 +68,10 @@ public class EditorController implements Initializable {
     private static final String DAY = "Egy nap";
     /**
      * Regex for checking if a string is parsable to double based on JavaDoc.
-     * https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html#valueOf-java.lang.String-
+     * {@link}https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html#valueOf-java.lang.String-
      */
     private final String fpRegex =
-            ("[\\x00-\\x20]*[+-]?(NaN|Infinity|((((\\p{Digit}+)" +
+            ("[\\x00-\\x20]*(NaN|Infinity|((((\\p{Digit}+)" +
                     "(\\.)?((\\p{Digit}+)?)([eE][+-]?(\\p{Digit" +
                     "}+))?)|(\\.((\\p{Digit}+))([eE][+-]?(\\p{D" +
                     "igit}+))?)|(((0[xX](\\p{XDigit}+)(\\.)?)|(" +
