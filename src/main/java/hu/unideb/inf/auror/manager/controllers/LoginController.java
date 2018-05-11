@@ -122,11 +122,12 @@ public class LoginController implements Initializable {
      * Creates the main view and opens it.
      */
     private void OpenMainView() {
-        Parent root = null;
+        Parent root;
         try {
             root = FXMLLoader.load(LoginController.class.getResource("/fxml/MainView.fxml"));
         } catch (IOException e) {
             e.printStackTrace();
+            return;
         }
         Stage stage = new Stage();
         stage.setTitle("Financial manager");
